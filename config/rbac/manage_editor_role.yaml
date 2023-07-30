@@ -1,0 +1,31 @@
+# permissions for end users to edit manages.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: manage-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: job-operator
+    app.kubernetes.io/part-of: job-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: manage-editor-role
+rules:
+- apiGroups:
+  - job.wajc.com
+  resources:
+  - manages
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - job.wajc.com
+  resources:
+  - manages/status
+  verbs:
+  - get

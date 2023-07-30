@@ -1,0 +1,27 @@
+# permissions for end users to view manages.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: manage-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: job-operator
+    app.kubernetes.io/part-of: job-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: manage-viewer-role
+rules:
+- apiGroups:
+  - job.wajc.com
+  resources:
+  - manages
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - job.wajc.com
+  resources:
+  - manages/status
+  verbs:
+  - get
