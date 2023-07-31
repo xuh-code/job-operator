@@ -24,7 +24,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/intstr"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -91,6 +90,9 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			if err != nil {
 				return ctrl.Result{}, err
 			}
+		} else {
+
+			logger.Info("Create new deployment", "Deployment.Name", deploy.Name, "error info : ", err.Error())
 		}
 	} else {
 		err := r.Client.Update(context.TODO(), deploy)
@@ -116,8 +118,13 @@ func newPodForCR(cr *jobv1alpha1.Manage) *v1.Deployment {
 		},
 		Spec: v1.DeploymentSpec{
 			Replicas: cr.Spec.Replicas,
+			Selector: &metav1.LabelSelector{
+				MatchLabels: labels,
+			},
 			Template: v12.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{},
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: labels,
+				},
 				Spec: v12.PodSpec{
 					Containers: []v12.Container{
 						{
@@ -125,7 +132,7 @@ func newPodForCR(cr *jobv1alpha1.Manage) *v1.Deployment {
 							Image: cr.Spec.Image,
 							Ports: []v12.ContainerPort{
 								{
-									Name:          "80",
+									//Name:          "tcp80",
 									ContainerPort: 80,
 									Protocol:      v12.ProtocolTCP,
 								},
@@ -134,17 +141,20 @@ func newPodForCR(cr *jobv1alpha1.Manage) *v1.Deployment {
 					},
 				},
 			},
-			Strategy: v1.DeploymentStrategy{
-				Type: v1.RollingUpdateDeploymentStrategyType,
-				RollingUpdate: &v1.RollingUpdateDeployment{
-					MaxUnavailable: &intstr.IntOrString{
-						IntVal: 0,
-					},
-					MaxSurge: &intstr.IntOrString{
-						StrVal: "25%",
-					},
-				},
-			},
+			//Strategy: v1.DeploymentStrategy{
+			//	Type: v1.RollingUpdateDeploymentStrategyType,
+			//	RollingUpdate: &v1.RollingUpdateDeployment{
+			//		MaxUnavailable: &intstr.IntOrString{
+			//			Type:   2,
+			//			IntVal: 0,
+			//			StrVal: "0",
+			//		},
+			//		MaxSurge: &intstr.IntOrString{
+			//			Type:   3,
+			//			StrVal: "25%",
+			//		},
+			//	},
+			//},
 		},
 	}
 }

@@ -3,10 +3,13 @@ kind: Manage
 metadata:
   labels:
     app.kubernetes.io/name: manage
-    app.kubernetes.io/instance: manage-sample
+#    app.kubernetes.io/instance: manage-sample
     app.kubernetes.io/part-of: job-operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: job-operator
   name: manage-sample
 spec:
+  replicas: 1
   # TODO(user): Add fields here
+  image: wajc.zhejianglab.com/base/nginx:stable-alpine
+  name: nginx-test
