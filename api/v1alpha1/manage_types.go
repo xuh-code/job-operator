@@ -30,15 +30,22 @@ type ManageSpec struct {
 
 	// Foo is an example field of Manage. Edit manage_types.go to remove/update
 	//Foo string `json:"foo,omitempty"`
-	Image    string `json:"image"`
+
+	Image string `json:"image"`
+
+	// +optional
 	Replicas *int32 `json:"replicas"`
-	Name     string `json:"name"`
+
+	// +optional
+	Name string `json:"name"`
 }
 
 // ManageStatus defines the observed state of Manage
 type ManageStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	// +optional
+	Message string `json:"message"`
 }
 
 //+kubebuilder:object:root=true

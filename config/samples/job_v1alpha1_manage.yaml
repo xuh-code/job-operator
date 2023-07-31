@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/created-by: job-operator
   name: manage-sample
 spec:
-  replicas: 1
+#  replicas: 2
   # TODO(user): Add fields here
   image: wajc.zhejianglab.com/base/nginx:stable-alpine
   name: nginx-test

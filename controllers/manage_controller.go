@@ -69,9 +69,17 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			//	拥有的对象会自动进行垃圾回收. 对于其他清理逻辑, 请使用终结器
 			//	返回而且不排队
 			return ctrl.Result{}, nil
+		} else {
+			status := jobv1alpha1.ManageStatus{
+				Message: err.Error(),
+			}
+			job.Status = status
+			_ = r.Status().Update(ctx, job)
+
+			// 读取对象时报错- 重新排队请求.
+			return ctrl.Result{}, err
 		}
-		// 读取对象时报错- 重新排队请求.
-		return ctrl.Result{}, err
+
 	}
 
 	// 根据CRD生成一个新的Deployment资源对象
@@ -88,16 +96,50 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			logger.Info("Create new deployment", "Deployment.Name", deploy.Name)
 			err := r.Client.Create(context.TODO(), deploy)
 			if err != nil {
+				status := jobv1alpha1.ManageStatus{
+					Message: err.Error(),
+				}
+				job.Status = status
+
+				_ = r.Status().Update(ctx, job)
 				return ctrl.Result{}, err
+			} else {
+				status := jobv1alpha1.ManageStatus{
+					Message: "success",
+				}
+				job.Status = status
+				_ = r.Status().Update(ctx, job)
 			}
 		} else {
 
+			status := jobv1alpha1.ManageStatus{
+				Message: "success",
+			}
+			job.Status = status
+			_ = r.Status().Update(ctx, job)
+
 			logger.Info("Create new deployment", "Deployment.Name", deploy.Name, "error info : ", err.Error())
+
+			return ctrl.Result{}, err
 		}
 	} else {
 		err := r.Client.Update(context.TODO(), deploy)
 		if err != nil {
-			logger.Info("Update Deployment errors")
+
+			status := jobv1alpha1.ManageStatus{
+				Message: err.Error(),
+			}
+			job.Status = status
+			_ = r.Status().Update(ctx, job)
+
+			return ctrl.Result{}, err
+		} else {
+			status := jobv1alpha1.ManageStatus{
+				Message: "success",
+			}
+			job.Status = status
+			_ = r.Status().Update(ctx, job)
+			return ctrl.Result{}, nil
 		}
 	}
 

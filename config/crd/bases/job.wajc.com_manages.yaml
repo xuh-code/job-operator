@@ -36,8 +36,6 @@ spec:
             description: ManageSpec defines the desired state of Manage
             properties:
               image:
-                description: Foo is an example field of Manage. Edit manage_types.go
-                  to remove/update Foo string `json:"foo,omitempty"`
                 type: string
               name:
                 type: string
@@ -46,11 +44,15 @@ spec:
                 type: integer
             required:
             - image
-            - name
-            - replicas
             type: object
           status:
             description: ManageStatus defines the observed state of Manage
+            properties:
+              message:
+                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                  of cluster Important: Run "make" to regenerate code after modifying
+                  this file'
+                type: string
             type: object
         type: object
     served: true
