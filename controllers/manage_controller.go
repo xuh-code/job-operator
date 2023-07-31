@@ -18,10 +18,16 @@ package controllers
 
 import (
 	"context"
-
+	v1 "k8s.io/api/apps/v1"
+	v12 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	jobv1alpha1 "gitee.com/xuh-code/job/api/v1alpha1"
@@ -47,11 +53,100 @@ type ManageReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.4/pkg/reconcile
 func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	logger := log.FromContext(ctx)
+	logger.WithValues("Request.Namespace", req.Namespace, "Request.Name", req.Name, "Request.Name", req.String())
 
 	// TODO(user): your logic here
+	logger.Info("Reconcile Manage Info")
+	logger.Info(req.String())
+
+	job := &jobv1alpha1.Manage{}
+
+	// 获取Manage 实例
+	err := r.Client.Get(context.TODO(), req.NamespacedName, job)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			//	找不到请求对象, 可以在协调请求后删除.
+			//	拥有的对象会自动进行垃圾回收. 对于其他清理逻辑, 请使用终结器
+			//	返回而且不排队
+			return ctrl.Result{}, nil
+		}
+		// 读取对象时报错- 重新排队请求.
+		return ctrl.Result{}, err
+	}
+
+	// 根据CRD生成一个新的Deployment资源对象
+	deploy := newPodForCR(job)
+	if err := controllerutil.SetControllerReference(job, deploy, r.Scheme); err != nil {
+		return ctrl.Result{}, err
+	}
+
+	// 检查现有deployment资源是否存在
+	found := &v1.Deployment{}
+	if err = r.Client.Get(context.TODO(), types.NamespacedName{Name: deploy.Name, Namespace: deploy.Namespace}, found); err != nil {
+		//	如果不存在 deployment, name, if中创建
+		if errors.IsNotFound(err) {
+			logger.Info("Create new deployment", "Deployment.Name", deploy.Name)
+			err := r.Client.Create(context.TODO(), deploy)
+			if err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+	} else {
+		err := r.Client.Update(context.TODO(), deploy)
+		if err != nil {
+			logger.Info("Update Deployment errors")
+		}
+	}
 
 	return ctrl.Result{}, nil
+}
+
+func newPodForCR(cr *jobv1alpha1.Manage) *v1.Deployment {
+
+	labels := map[string]string{
+		"app": cr.Name,
+	}
+
+	return &v1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      cr.Name,
+			Namespace: "default",
+			Labels:    labels,
+		},
+		Spec: v1.DeploymentSpec{
+			Replicas: cr.Spec.Replicas,
+			Template: v12.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{},
+				Spec: v12.PodSpec{
+					Containers: []v12.Container{
+						{
+							Name:  "user",
+							Image: cr.Spec.Image,
+							Ports: []v12.ContainerPort{
+								{
+									Name:          "80",
+									ContainerPort: 80,
+									Protocol:      v12.ProtocolTCP,
+								},
+							},
+						},
+					},
+				},
+			},
+			Strategy: v1.DeploymentStrategy{
+				Type: v1.RollingUpdateDeploymentStrategyType,
+				RollingUpdate: &v1.RollingUpdateDeployment{
+					MaxUnavailable: &intstr.IntOrString{
+						IntVal: 0,
+					},
+					MaxSurge: &intstr.IntOrString{
+						StrVal: "25%",
+					},
+				},
+			},
+		},
+	}
 }
 
 // SetupWithManager sets up the controller with the Manager.

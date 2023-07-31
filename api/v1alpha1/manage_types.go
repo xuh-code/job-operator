@@ -29,7 +29,10 @@ type ManageSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of Manage. Edit manage_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	//Foo string `json:"foo,omitempty"`
+	Image    string `json:"image"`
+	Replicas *int32 `json:"replicas"`
+	Name     string `json:"name"`
 }
 
 // ManageStatus defines the observed state of Manage
