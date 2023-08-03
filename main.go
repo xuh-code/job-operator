@@ -32,7 +32,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	jobv1alpha1 "gitee.com/xuh-code/job/api/v1alpha1"
+	jobv1alpha2 "gitee.com/xuh-code/job/apis/job/v1alpha2"
 	"gitee.com/xuh-code/job/controllers"
+	jobcontrollers "gitee.com/xuh-code/job/controllers/job"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -45,6 +47,7 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(jobv1alpha1.AddToScheme(scheme))
+	utilruntime.Must(jobv1alpha2.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -90,6 +93,13 @@ func main() {
 	}
 
 	if err = (&controllers.ManageReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Manage")
+		os.Exit(1)
+	}
+	if err = (&jobcontrollers.ManageReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
