@@ -31,3 +31,43 @@ func (r *Manage) SetupWebhookWithManager(mgr ctrl.Manager) error {
 }
 
 // TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
+
+//+kubebuilder:webhook:path=/mutate-job-wajc-com-v1alpha2-manage,mutating=true,failurePolicy=fail,sideEffects=None,groups=job.wajc.com,resources=manages,verbs=create;update,versions=v1alpha2,name=mmanage.kb.io,admissionReviewVersions=v1
+//
+//var _ webhook.Defaulter = &Manage{}
+//
+//// Default implements webhook.Defaulter so a webhook will be registered for the type
+//func (r *Manage) Default() {
+//	managelog.Info("default", "name", r.Name)
+//
+//	// TODO(user): fill in your defaulting logic.
+//}
+//
+//// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
+////+kubebuilder:webhook:path=/validate-job-wajc-com-v1alpha2-manage,mutating=false,failurePolicy=fail,sideEffects=None,groups=job.wajc.com,resources=manages,verbs=create;update,versions=v1alpha2,name=vmanage.kb.io,admissionReviewVersions=v1
+//
+//var _ webhook.Validator = &Manage{}
+//
+//// ValidateCreate implements webhook.Validator so a webhook will be registered for the type
+//func (r *Manage) ValidateCreate() error {
+//	managelog.Info("validate create", "name", r.Name)
+//
+//	// TODO(user): fill in your validation logic upon object creation.
+//	return nil
+//}
+//
+//// ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
+//func (r *Manage) ValidateUpdate(old runtime.Object) error {
+//	managelog.Info("validate update", "name", r.Name)
+//
+//	// TODO(user): fill in your validation logic upon object update.
+//	return nil
+//}
+//
+//// ValidateDelete implements webhook.Validator so a webhook will be registered for the type
+//func (r *Manage) ValidateDelete() error {
+//	managelog.Info("validate delete", "name", r.Name)
+//
+//	// TODO(user): fill in your validation logic upon object deletion.
+//	return nil
+//}

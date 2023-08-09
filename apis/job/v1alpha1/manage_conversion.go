@@ -12,23 +12,7 @@ func (src *Manage) ConvertTo(dstRaw conversion.Hub) error {
 	image := src.Spec.Image
 	name := src.Spec.Name
 	replicas := src.Spec.Replicas
-	//scheduleParts := []string{"*", "*", "*", "*", "*"}
-	//if sched.Minute != nil {
-	//	scheduleParts[0] = string(*sched.Minute)
-	//}
-	//if sched.Hour != nil {
-	//	scheduleParts[1] = string(*sched.Hour)
-	//}
-	//if sched.DayOfMonth != nil {
-	//	scheduleParts[2] = string(*sched.DayOfMonth)
-	//}
-	//if sched.Month != nil {
-	//	scheduleParts[3] = string(*sched.Month)
-	//}
-	//if sched.DayOfWeek != nil {
-	//	scheduleParts[4] = string(*sched.DayOfWeek)
-	//}
-	//dst.Spec.Schedule = strings.Join(scheduleParts, " ")
+
 	dst.Spec.Image = image
 	dst.Spec.Name = name
 	dst.Spec.Replicas = replicas
@@ -45,8 +29,6 @@ func (dst *Manage) ConvertFrom(srcRaw conversion.Hub) error {
 	dst.Spec.Image = src.Spec.Image
 	dst.Spec.Replicas = src.Spec.Replicas
 	dst.Spec.Name = src.Spec.Name
-
-	// +kubebuilder:docs-gen:collapse=rote conversion
 
 	return nil
 }
