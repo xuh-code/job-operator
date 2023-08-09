@@ -10,3 +10,5 @@ metadata:
   name: manage-sample
 spec:
   # TODO(user): Add fields here
+  image: wajc.zhejianglab.com/base/nginx:stable-alpine
+  name: nginx-test

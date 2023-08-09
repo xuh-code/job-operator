@@ -30,7 +30,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	jobv1alpha1 "gitee.com/xuh-code/job/api/v1alpha1"
+	jobv1alpha1 "gitee.com/xuh-code/job/apis/job/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 

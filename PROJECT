@@ -16,7 +16,7 @@ resources:
   domain: wajc.com
   group: job
   kind: Manage
-  path: gitee.com/xuh-code/job/api/v1alpha1
+  path: gitee.com/xuh-code/job/apis/job/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -27,4 +27,7 @@ resources:
   kind: Manage
   path: gitee.com/xuh-code/job/apis/job/v1alpha2
   version: v1alpha2
+  webhooks:
+    conversion: true
+    webhookVersion: v1
 version: "3"

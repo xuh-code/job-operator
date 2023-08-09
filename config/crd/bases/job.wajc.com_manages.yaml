@@ -79,16 +79,26 @@ spec:
           spec:
             description: ManageSpec defines the desired state of Manage
             properties:
-              foo:
-                description: Foo is an example field of Manage. Edit manage_types.go
-                  to remove/update
+              image:
                 type: string
+              name:
+                type: string
+              replicas:
+                format: int32
+                type: integer
+            required:
+            - image
             type: object
           status:
             description: ManageStatus defines the observed state of Manage
+            properties:
+              message:
+                type: string
+            required:
+            - message
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}

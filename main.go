@@ -31,7 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	jobv1alpha1 "gitee.com/xuh-code/job/api/v1alpha1"
+	jobv1alpha1 "gitee.com/xuh-code/job/apis/job/v1alpha1"
 	jobv1alpha2 "gitee.com/xuh-code/job/apis/job/v1alpha2"
 	"gitee.com/xuh-code/job/controllers"
 	jobcontrollers "gitee.com/xuh-code/job/controllers/job"
@@ -104,6 +104,10 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Manage")
+		os.Exit(1)
+	}
+	if err = (&jobv1alpha2.Manage{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "Manage")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

@@ -29,7 +29,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	jobv1alpha1 "gitee.com/xuh-code/job/api/v1alpha1"
+	jobv1alpha1 "gitee.com/xuh-code/job/apis/job/v1alpha1"
 )
 
 // ManageReconciler reconciles a Manage object
@@ -56,7 +56,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	logger.WithValues("Request.Namespace", req.Namespace, "Request.Name", req.Name, "Request.Name", req.String())
 
 	// TODO(user): your logic here
-	logger.Info("Reconcile Manage Info")
+	logger.Info("Reconcile Manage v1 Info")
 	logger.Info(req.String())
 
 	job := &jobv1alpha1.Manage{}
