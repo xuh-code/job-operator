@@ -18,7 +18,6 @@ package job
 
 import (
 	"context"
-	jobv1alpha1 "gitee.com/xuh-code/job/apis/job/v1alpha1"
 	v1 "k8s.io/api/apps/v1"
 	v12 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -44,6 +43,9 @@ type ManageReconciler struct {
 //+kubebuilder:rbac:groups=job.wajc.com,resources=manages/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=job.wajc.com,resources=manages/finalizers,verbs=update
 
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=apps,resources=deployments/status,verbs=get
+
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
@@ -61,7 +63,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	logger.Info("Reconcile Manage v2 Info")
 	logger.Info(req.String())
 
-	job := &jobv1alpha1.Manage{}
+	job := &jobv1alpha2.Manage{}
 
 	// 获取Manage 实例
 	err := r.Client.Get(context.TODO(), req.NamespacedName, job)
@@ -72,7 +74,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			//	返回而且不排队
 			return ctrl.Result{}, nil
 		} else {
-			status := jobv1alpha1.ManageStatus{
+			status := jobv1alpha2.ManageStatus{
 				Message: err.Error(),
 			}
 			job.Status = status
@@ -98,7 +100,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			logger.Info("Create new deployment", "Deployment.Name", deploy.Name)
 			err := r.Client.Create(context.TODO(), deploy)
 			if err != nil {
-				status := jobv1alpha1.ManageStatus{
+				status := jobv1alpha2.ManageStatus{
 					Message: err.Error(),
 				}
 				job.Status = status
@@ -106,7 +108,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 				_ = r.Status().Update(ctx, job)
 				return ctrl.Result{}, err
 			} else {
-				status := jobv1alpha1.ManageStatus{
+				status := jobv1alpha2.ManageStatus{
 					Message: "success",
 				}
 				job.Status = status
@@ -114,7 +116,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			}
 		} else {
 
-			status := jobv1alpha1.ManageStatus{
+			status := jobv1alpha2.ManageStatus{
 				Message: "success",
 			}
 			job.Status = status
@@ -128,7 +130,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 		err := r.Client.Update(context.TODO(), deploy)
 		if err != nil {
 
-			status := jobv1alpha1.ManageStatus{
+			status := jobv1alpha2.ManageStatus{
 				Message: err.Error(),
 			}
 			job.Status = status
@@ -136,7 +138,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 
 			return ctrl.Result{}, err
 		} else {
-			status := jobv1alpha1.ManageStatus{
+			status := jobv1alpha2.ManageStatus{
 				Message: "success",
 			}
 			job.Status = status
@@ -148,7 +150,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 	return ctrl.Result{}, nil
 }
 
-func newPodForCR(cr *jobv1alpha1.Manage) *v1.Deployment {
+func newPodForCR(cr *jobv1alpha2.Manage) *v1.Deployment {
 
 	labels := map[string]string{
 		"app": cr.Name,

@@ -32,9 +32,7 @@ func (r *Manage) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 // TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 
-//+
-//kubebuilder
-//:webhook:path=/mutate-job-wajc-com-v1alpha2-manage,mutating=true,failurePolicy=fail,sideEffects=None,groups=job.wajc.com,resources=manages,verbs=create;update,versions=v1alpha2,name=mmanage.kb.io,admissionReviewVersions=v1
+////+kubebuilder:webhook:path=/mutate-job-wajc-com-v1alpha2-manage,mutating=true,failurePolicy=fail,sideEffects=None,groups=job.wajc.com,resources=manages,verbs=create;update,versions=v1alpha2,name=mmanage.kb.io,admissionReviewVersions=v1
 //
 //var _ webhook.Defaulter = &Manage{}
 //
@@ -46,9 +44,7 @@ func (r *Manage) SetupWebhookWithManager(mgr ctrl.Manager) error {
 //}
 //
 //// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
-//+
-//kubebuilder
-//:webhook:path=/validate-job-wajc-com-v1alpha2-manage,mutating=false,failurePolicy=fail,sideEffects=None,groups=job.wajc.com,resources=manages,verbs=create;update,versions=v1alpha2,name=vmanage.kb.io,admissionReviewVersions=v1
+////+kubebuilder:webhook:path=/validate-job-wajc-com-v1alpha2-manage,mutating=false,failurePolicy=fail,sideEffects=None,groups=job.wajc.com,resources=manages,verbs=create;update,versions=v1alpha2,name=vmanage.kb.io,admissionReviewVersions=v1
 //
 //var _ webhook.Validator = &Manage{}
 //

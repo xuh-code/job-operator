@@ -1,27 +1,54 @@
----
-apiVersion: admissionregistration.k8s.io/v1
-kind: MutatingWebhookConfiguration
-metadata:
-  creationTimestamp: null
-  name: mutating-webhook-configuration
-webhooks:
-- admissionReviewVersions:
-  - v1
-  clientConfig:
-    service:
-      name: webhook-service
-      namespace: system
-      path: /mutate-job-wajc-com-v1alpha2-manage
-  failurePolicy: Fail
-  name: mmanage.kb.io
-  rules:
-  - apiGroups:
-    - job.wajc.com
-    apiVersions:
-    - v1alpha2
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - manages
-  sideEffects: None
+#---
+#apiVersion: admissionregistration.k8s.io/v1
+#kind: MutatingWebhookConfiguration
+#metadata:
+#  creationTimestamp: null
+#  name: mutating-webhook-configuration
+#webhooks:
+#- admissionReviewVersions:
+#  - v1
+#  clientConfig:
+#    service:
+#      name: webhook-service
+#      namespace: system
+#      path: /mutate-job-wajc-com-v1alpha2-manage
+#  failurePolicy: Fail
+#  name: mmanage.kb.io
+#  rules:
+#  - apiGroups:
+#    - job.wajc.com
+#    apiVersions:
+#    - v1alpha2
+#    operations:
+#    - CREATE
+#    - UPDATE
+#    resources:
+#    - manages
+#  sideEffects: None
+#---
+#apiVersion: admissionregistration.k8s.io/v1
+#kind: ValidatingWebhookConfiguration
+#metadata:
+#  creationTimestamp: null
+#  name: validating-webhook-configuration
+#webhooks:
+#- admissionReviewVersions:
+#  - v1
+#  clientConfig:
+#    service:
+#      name: webhook-service
+#      namespace: system
+#      path: /validate-job-wajc-com-v1alpha2-manage
+#  failurePolicy: Fail
+#  name: vmanage.kb.io
+#  rules:
+#  - apiGroups:
+#    - job.wajc.com
+#    apiVersions:
+#    - v1alpha2
+#    operations:
+#    - CREATE
+#    - UPDATE
+#    resources:
+#    - manages
+#  sideEffects: None

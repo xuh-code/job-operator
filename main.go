@@ -33,7 +33,6 @@ import (
 
 	jobv1alpha1 "gitee.com/xuh-code/job/apis/job/v1alpha1"
 	jobv1alpha2 "gitee.com/xuh-code/job/apis/job/v1alpha2"
-	"gitee.com/xuh-code/job/controllers"
 	jobcontrollers "gitee.com/xuh-code/job/controllers/job"
 	//+kubebuilder:scaffold:imports
 )
@@ -92,7 +91,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.ManageReconciler{
+	if err = (&jobcontrollers.ManageReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {

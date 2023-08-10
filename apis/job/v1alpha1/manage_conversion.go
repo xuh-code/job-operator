@@ -9,13 +9,11 @@ import (
 func (src *Manage) ConvertTo(dstRaw conversion.Hub) error {
 	dst := dstRaw.(*v1alpha2.Manage)
 
-	image := src.Spec.Image
-	name := src.Spec.Name
-	replicas := src.Spec.Replicas
+	dst.ObjectMeta = src.ObjectMeta
 
-	dst.Spec.Image = image
-	dst.Spec.Name = name
-	dst.Spec.Replicas = replicas
+	dst.Spec.Image = src.Spec.Image
+	dst.Spec.Name = src.Spec.Name
+	dst.Spec.Replicas = src.Spec.Replicas
 
 	// +kubebuilder:docs-gen:collapse=rote conversion
 

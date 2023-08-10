@@ -1,15 +1,16 @@
 apiVersion: job.wajc.com/v1alpha1
 kind: Manage
 metadata:
-  labels:
-    app.kubernetes.io/name: manage
+#  labels:
+#    app.kubernetes.io/name: manage
 #    app.kubernetes.io/instance: manage-sample
-    app.kubernetes.io/part-of: job-operator
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: job-operator
-  name: manage-sample2
+#    app.kubernetes.io/part-of: job-operator
+#    app.kubernetes.io/managed-by: kustomize
+#    app.kubernetes.io/created-by: job-operator
+  name: sample11
 spec:
-#  replicas: 2
+  replicas: 2
   # TODO(user): Add fields here
   image: wajc.zhejianglab.com/base/nginx:stable-alpine
-  name: nginx-test
+  name: nginx-test1
+
