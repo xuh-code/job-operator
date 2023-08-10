@@ -92,3 +92,30 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
+## 项目创建
+
+kubebuilder init --plugins go/v3 --domain wajc.com --project-version 3 --owner "xuh"
+
+## 创建API
+
+kubebuilder create api --group job --version v1alpha1 --kind Manage
+
+## 创建v2api
+
+kubebuilder create api --group job --version v1alpha2 --kind Manage
+
+## 创建webhook
+
+kubebuilder create webhook --group job --version v1alpha2 --kind Manage --defaulting --programmatic-validation --conversion --force
+
+## 打包镜像
+
+make docker-build IMG=wajc.zhejianglab.com/wasc/manage:alphav2
+
+## 推送镜像
+
+make docker-push IMG=wajc.zhejianglab.com/wasc/manage:alphav2
+
+## 部署
+
+make deploy IMG=wajc.zhejianglab.com/wasc/manage:alphav2
