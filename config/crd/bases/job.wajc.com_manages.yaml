@@ -44,15 +44,16 @@ spec:
                 type: integer
             required:
             - image
+            - name
+            - replicas
             type: object
           status:
             description: ManageStatus defines the observed state of Manage
             properties:
               message:
-                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
-                  of cluster Important: Run "make" to regenerate code after modifying
-                  this file'
                 type: string
+            required:
+            - message
             type: object
         type: object
     served: true

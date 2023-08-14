@@ -24,9 +24,18 @@ func (src *Manage) ConvertTo(dstRaw conversion.Hub) error {
 func (dst *Manage) ConvertFrom(srcRaw conversion.Hub) error {
 	src := srcRaw.(*v1alpha2.Manage)
 
+	dst.ObjectMeta = src.ObjectMeta
+
 	dst.Spec.Image = src.Spec.Image
-	dst.Spec.Replicas = src.Spec.Replicas
+	if src.Spec.Replicas != nil {
+		replicas := int32(1)
+		src.Spec.Replicas = &replicas
+	}
+
+	//dst.Spec.Replicas = src.Spec.Replicas
 	dst.Spec.Name = src.Spec.Name
+
+	dst.Status.Message = src.Status.Message
 
 	return nil
 }

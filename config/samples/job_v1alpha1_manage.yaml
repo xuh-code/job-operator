@@ -7,10 +7,11 @@ metadata:
 #    app.kubernetes.io/part-of: job-operator
 #    app.kubernetes.io/managed-by: kustomize
 #    app.kubernetes.io/created-by: job-operator
-  name: sample11
+  name: sample-v1-1
 spec:
   replicas: 2
   # TODO(user): Add fields here
   image: wajc.zhejianglab.com/base/nginx:stable-alpine
   name: nginx-test1
+
 

@@ -33,10 +33,8 @@ type ManageSpec struct {
 
 	Image string `json:"image"`
 
-	// +optional
 	Replicas *int32 `json:"replicas"`
 
-	// +optional
 	Name string `json:"name"`
 }
 
@@ -44,7 +42,7 @@ type ManageSpec struct {
 type ManageStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	// +optional
+
 	Message string `json:"message"`
 }
 

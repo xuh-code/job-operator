@@ -61,7 +61,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 
 	// TODO(user): your logic here
 	logger.Info("Reconcile Manage v2 Info")
-	logger.Info(req.String())
+	//logger.Info(req.String())
 
 	job := &jobv1alpha2.Manage{}
 
