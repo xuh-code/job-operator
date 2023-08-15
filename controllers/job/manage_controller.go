@@ -25,6 +25,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -37,8 +38,9 @@ import (
 type ManageReconciler struct {
 	client.Client
 	//Event  record.EventRecorder
-	Scheme *runtime.Scheme
-	Log    logr.Logger
+	Scheme   *runtime.Scheme
+	Log      logr.Logger
+	Recorder record.EventRecorder
 }
 
 //+kubebuilder:rbac:groups=job.wajc.com,resources=manages,verbs=get;list;watch;create;update;patch;delete
@@ -87,6 +89,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			job.Status = status
 			_ = r.Status().Update(ctx, job)
 
+			r.Recorder.Event(job, v12.EventTypeWarning, "Error", err.Error())
 			// 读取对象时报错- 重新排队请求.
 			return ctrl.Result{}, err
 		}
@@ -122,6 +125,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			job.Status = status
 			_ = r.Status().Update(ctx, job)
 
+			r.Recorder.Event(job, v12.EventTypeWarning, "Error", err.Error())
 			logger.Info("Create new deployment", "Deployment.Name", deploy.Name, "error info : ", err.Error())
 			return ctrl.Result{}, err
 		}
@@ -135,6 +139,7 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 			job.Status = status
 			_ = r.Status().Update(ctx, job)
 
+			r.Recorder.Event(job, v12.EventTypeWarning, "Error", err.Error())
 			return ctrl.Result{}, err
 		} else {
 			status := jobv1alpha2.ManageStatus{
