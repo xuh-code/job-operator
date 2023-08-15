@@ -106,24 +106,16 @@ func (r *ManageReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 				job.Status = status
 
 				_ = r.Status().Update(ctx, job)
-				return ctrl.Result{}, err
-			} else {
-				status := jobv1alpha2.ManageStatus{
-					Message: "success",
-				}
-				job.Status = status
-				_ = r.Status().Update(ctx, job)
+				return ctrl.Result{}, nil
 			}
 		} else {
-
 			status := jobv1alpha2.ManageStatus{
-				Message: "success",
+				Message: err.Error(),
 			}
 			job.Status = status
 			_ = r.Status().Update(ctx, job)
 
 			logger.Info("Create new deployment", "Deployment.Name", deploy.Name, "error info : ", err.Error())
-
 			return ctrl.Result{}, err
 		}
 	} else {
