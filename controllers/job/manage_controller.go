@@ -18,16 +18,16 @@ package job
 
 import (
 	"context"
+	"github.com/go-logr/logr"
 	v1 "k8s.io/api/apps/v1"
 	v12 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
-
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	jobv1alpha2 "gitee.com/xuh-code/job/apis/job/v1alpha2"
@@ -36,7 +36,9 @@ import (
 // ManageReconciler reconciles a Manage object
 type ManageReconciler struct {
 	client.Client
+	//Event  record.EventRecorder
 	Scheme *runtime.Scheme
+	Log    logr.Logger
 }
 
 //+kubebuilder:rbac:groups=job.wajc.com,resources=manages,verbs=get;list;watch;create;update;patch;delete
@@ -45,6 +47,11 @@ type ManageReconciler struct {
 
 //+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=apps,resources=deployments/status,verbs=get
+
+//+kubebuilder:rbac:groups="",resources=service,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=Services/status,verbs=get
+
+// +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;update;patch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -201,5 +208,9 @@ func newPodForCR(cr *jobv1alpha2.Manage) *v1.Deployment {
 func (r *ManageReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&jobv1alpha2.Manage{}).
+		//For(&v1.Deployment{}).
+		//Watches(&source.Kind{Type: &v1.Deployment{}}, &handler.EnqueueRequestForObject{}).
+		//WithEventFilter(&ResourceLabelChangedPredicate{}).
+		//For(&v12.Service{}).Owns(&jobv1alpha2.Manage{}).
 		Complete(r)
 }

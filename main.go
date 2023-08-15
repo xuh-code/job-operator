@@ -97,7 +97,9 @@ func main() {
 
 	if err = (&jobcontrollers.ManageReconciler{
 		Client: mgr.GetClient(),
+		//Event:  mgr.GetEventRecorderFor("manage"),
 		Scheme: mgr.GetScheme(),
+		Log:    ctrl.Log.WithName("controllers").WithName("Manage"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Manage")
 		os.Exit(1)
