@@ -48,6 +48,7 @@ type ManageStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:scope=Cluster
 
 // Manage is the Schema for the manages API
 type Manage struct {
